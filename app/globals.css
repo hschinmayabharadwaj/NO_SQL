@@ -1,27 +1,124 @@
 @import "tailwindcss";
 
+/* Design tokens from DESIGN.md */
+@theme {
+  --color-brand-green: #00ed64;
+  --color-primary-deep: #00b545;
+  --color-primary-pressed: #008c34;
+  --color-brand-green-dark: #00684a;
+  --color-brand-green-mid: #00a35c;
+  --color-brand-green-soft: #c3f0d2;
+  --color-teal-deep: #001e2b;
+  --color-teal-mid: #00684a;
+  --color-accent-purple: #7b3ff2;
+  --color-accent-orange: #fa6e39;
+  --color-accent-pink: #f06bb8;
+  --color-accent-blue: #3d4f9f;
+  --color-warning-bg: #fff8e0;
+  --color-warning-text: #946f3f;
+  --color-surface: #f9fbfa;
+  --color-surface-soft: #f4f7f6;
+  --color-surface-feature: #e3fcef;
+  --color-hairline: #e1e5e8;
+  --color-hairline-soft: #eceff1;
+  --color-hairline-strong: #c1ccd6;
+  --color-hairline-dark: #1c2d38;
+  --color-ink: #001e2b;
+  --color-charcoal: #1c2d38;
+  --color-slate: #3d4f5b;
+  --color-steel: #5c6c7a;
+  --color-stone: #7c8c9a;
+  --color-muted: #a8b3bc;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+
+  --shadow-subtle: 0 1px 2px 0 rgb(0 30 43 / 0.04);
+  --shadow-card: 0 4px 12px 0 rgb(0 30 43 / 0.08);
+  --shadow-mockup: 0 12px 24px -4px rgb(0 30 43 / 0.12);
+  --shadow-modal: 0 16px 48px -8px rgb(0 30 43 / 0.16);
+}
+
+/* Euclid Circular A is a paid font: used if installed, otherwise Figtree (loaded in layout.js). */
+@theme inline {
+  --font-sans: "Euclid Circular A", var(--font-figtree), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-source-code), "SF Mono", Menlo, Consolas, monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-white font-sans text-base leading-[1.55] text-ink antialiased;
+  }
+}
+
 @layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-8;
+  }
+  .eyebrow {
+    @apply text-[11px] leading-[1.4] font-semibold tracking-[1px] uppercase;
+  }
+
+  /* Deep-teal hero band with atmospheric green glow */
+  .band {
+    @apply text-white;
+    background:
+      radial-gradient(ellipse 70% 80% at 90% -10%, rgb(0 104 74 / 0.55), transparent 60%),
+      radial-gradient(ellipse 50% 60% at -10% 110%, rgb(0 61 79 / 0.8), transparent 60%),
+      var(--color-teal-deep);
+  }
+
+  .card {
+    @apply rounded-lg border border-hairline bg-white;
+  }
+
   .input {
-    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200;
+    @apply h-11 w-full rounded-md border border-hairline-strong bg-white px-4 text-base text-ink outline-none transition duration-150 placeholder:text-muted focus:border-brand-green-dark focus:ring-1 focus:ring-brand-green-dark disabled:bg-surface-soft disabled:text-muted;
+  }
+  textarea.input {
+    @apply h-auto py-3;
   }
   .label {
-    @apply mb-1 block text-sm font-medium text-slate-700;
+    @apply mb-1.5 block text-sm font-medium text-charcoal;
   }
+
+  /* Pill buttons */
   .btn-primary,
   .btn-secondary,
+  .btn-secondary-dark,
   .btn-danger {
-    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-[22px] py-2.5 text-sm leading-[1.3] font-semibold whitespace-nowrap transition duration-150 disabled:cursor-not-allowed;
   }
   .btn-primary {
-    @apply bg-indigo-600 text-white hover:bg-indigo-700;
+    @apply bg-brand-green text-ink hover:bg-primary-deep active:bg-primary-pressed disabled:bg-hairline disabled:text-muted;
   }
   .btn-secondary {
-    @apply border border-slate-300 bg-white text-slate-700 hover:bg-slate-100;
+    @apply border border-hairline-strong bg-white text-ink hover:bg-surface-soft disabled:text-muted;
+  }
+  .btn-secondary-dark {
+    @apply border border-white/25 text-white hover:bg-white/10 disabled:text-muted;
   }
   .btn-danger {
-    @apply bg-red-600 text-white hover:bg-red-700;
+    @apply border border-red-200 bg-white text-red-700 hover:bg-red-50 disabled:text-muted;
   }
-  .card {
-    @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+  .btn-sm {
+    @apply px-3.5 py-1.5 text-[13px];
+  }
+  .btn-ghost {
+    @apply rounded-md px-3 py-2 text-sm font-semibold text-ink transition duration-150 hover:bg-surface-soft;
+  }
+  .link {
+    @apply text-sm font-medium text-brand-green-dark hover:underline;
+  }
+
+  .pill-tab {
+    @apply rounded-full border border-hairline px-4 py-2 text-sm font-medium text-steel transition duration-150 hover:border-hairline-strong hover:text-ink max-sm:py-2.5;
+  }
+  .pill-tab-active {
+    @apply border-ink bg-ink text-white hover:border-ink hover:text-white;
   }
 }

@@ -1,10 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import Alert from "@/components/Alert";
+import PageHeader from "@/components/PageHeader";
 import { api, formatDate } from "@/lib/api";
+
+const back = { href: "/admin", label: "Dashboard" };
 
 export default function EventRegistrationsPage() {
   const { id } = useParams();
@@ -43,60 +45,70 @@ export default function EventRegistrationsPage() {
     }
   }
 
-  if (loading) return <p className="animate-pulse text-slate-500">Loading registrations…</p>;
-
   return (
-    <div className="space-y-6">
-      <Link href="/admin" className="text-sm text-indigo-600 hover:underline">← Back to dashboard</Link>
+    <>
+      <PageHeader
+        back={back}
+        eyebrow="Registrations"
+        title={event?.title ?? (loading ? "Loading…" : "Event unavailable")}
+        subtitle={event && `${formatDate(event.date)} · ${event.venue}`}
+      >
+        {event && (
+          <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm">
+            <span className="font-semibold text-brand-green">{event.registrationCount}</span> / {event.capacity} registered ·{" "}
+            {event.seatsLeft} seats left
+          </span>
+        )}
+      </PageHeader>
 
-      {event && (
-        <div>
-          <h1 className="text-2xl font-bold">{event.title}</h1>
-          <p className="mt-1 text-slate-500">
-            {formatDate(event.date)} · {event.venue} · {event.registrationCount} / {event.capacity} registered ({event.seatsLeft} seats left)
-          </p>
-        </div>
-      )}
+      <div className="container-page space-y-6 py-12 sm:py-16">
+        {message && <Alert type={message.type}>{message.text}</Alert>}
 
-      {message && <Alert type={message.type}>{message.text}</Alert>}
-
-      {event && (
-        <section className="card overflow-x-auto">
-          <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="bg-slate-50 text-slate-500">
-              <tr>
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">USN</th>
-                <th className="px-4 py-3 font-medium">Email</th>
-                <th className="px-4 py-3 font-medium">Department</th>
-                <th className="px-4 py-3 font-medium">Registered at</th>
-                <th className="px-4 py-3 text-right font-medium">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {registrations.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-slate-500">No registrations yet.</td>
+        {loading ? (
+          <div className="card h-48 animate-pulse bg-surface" />
+        ) : event && (
+          <div className="card overflow-x-auto">
+            <table className="w-full min-w-[760px] text-left text-sm">
+              <thead className="border-b border-hairline bg-surface">
+                <tr className="eyebrow text-stone">
+                  <th className="px-5 py-3 font-semibold">Student</th>
+                  <th className="px-5 py-3 font-semibold">USN</th>
+                  <th className="px-5 py-3 font-semibold">Department</th>
+                  <th className="px-5 py-3 font-semibold">Registered at</th>
+                  <th className="px-5 py-3 text-right font-semibold">Action</th>
                 </tr>
-              )}
-              {registrations.map((r) => (
-                <tr key={r._id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium">{r.studentName}</td>
-                  <td className="px-4 py-3 font-mono text-xs">{r.usn}</td>
-                  <td className="px-4 py-3 text-slate-600">{r.email}</td>
-                  <td className="px-4 py-3 text-slate-600">{r.department}</td>
-                  <td className="px-4 py-3 text-slate-600">{formatDate(r.registeredAt)}</td>
-                  <td className="px-4 py-3 text-right">
-                    <button className="btn-danger px-3 py-1.5" onClick={() => cancel(r)} disabled={cancelling === r._id}>
-                      {cancelling === r._id ? "Cancelling…" : "Cancel"}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      )}
-    </div>
+              </thead>
+              <tbody className="divide-y divide-hairline-soft">
+                {registrations.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="px-5 py-12 text-center text-steel">No registrations yet.</td>
+                  </tr>
+                )}
+                {registrations.map((r) => (
+                  <tr key={r._id} className="hover:bg-surface">
+                    <td className="px-5 py-4">
+                      <p className="font-medium">{r.studentName}</p>
+                      <p className="text-[13px] text-steel">{r.email}</p>
+                    </td>
+                    <td className="px-5 py-4">
+                      <code className="rounded-sm bg-surface-soft px-1.5 py-0.5 font-mono text-[13px]">{r.usn}</code>
+                    </td>
+                    <td className="px-5 py-4">
+                      <span className="rounded-full bg-brand-green-soft px-2.5 py-1 text-[13px] font-semibold text-brand-green-dark">{r.department}</span>
+                    </td>
+                    <td className="px-5 py-4 text-slate">{formatDate(r.registeredAt)}</td>
+                    <td className="px-5 py-4 text-right">
+                      <button className="btn-danger btn-sm" onClick={() => cancel(r)} disabled={cancelling === r._id}>
+                        {cancelling === r._id ? "Cancelling…" : "Cancel"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

@@ -18,6 +18,7 @@ The only configuration is **one environment variable: `MONGODB_URI`**.
 - Per-event registrations page with cancel option
 - "Seed sample data" button to load 5 demo events + registrations
 - Loading states, success/error messages, client + server validation
+- UI built from the tokens in `DESIGN.md`: deep-teal hero bands, green pill buttons, 12px cards, coloured category tags
 
 ## Folder structure
 
@@ -39,10 +40,12 @@ The only configuration is **one environment variable: `MONGODB_URI`**.
 │   ├── events/[id]/page.js           Event details + registration form
 │   ├── page.js                       Home: event cards, search, filter
 │   ├── layout.js                     Root layout + navbar
-│   └── globals.css                   Tailwind + small component classes
+│   └── globals.css                   Design tokens (from DESIGN.md) + component classes
 ├── components/
 │   ├── Alert.js                      Success / error message box
-│   └── EventForm.js                  Add / edit event form
+│   ├── CategoryTag.js                Coloured category label
+│   ├── EventForm.js                  Add / edit event form (modal dialog)
+│   └── PageHeader.js                 Dark-teal hero band for page headers
 ├── lib/
 │   ├── mongodb.js                    Cached MongoClient (serverless-safe)
 │   ├── validators.js                 Server-side input validation
@@ -50,6 +53,7 @@ The only configuration is **one environment variable: `MONGODB_URI`**.
 │   ├── constants.js                  Categories, departments, USN pattern
 │   ├── http.js                       JSON error helpers for API routes
 │   └── api.js                        Client-side fetch helper + date format
+├── DESIGN.md                         Visual design spec the UI follows
 ├── .env.example
 ├── jsconfig.json                     "@/..." import alias
 ├── postcss.config.mjs                Tailwind v4 PostCSS plugin
